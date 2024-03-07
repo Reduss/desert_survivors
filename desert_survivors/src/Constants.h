@@ -11,6 +11,8 @@ namespace Constants
 
 	const float baseSpeed = 100;
 
+	const int targetFPS = 60;
+
 }
 
 

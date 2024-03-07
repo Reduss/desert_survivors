@@ -19,6 +19,9 @@ public:
 	virtual void Render() { } ;
 	void SetActive(bool isActive) { this->isActive = isActive; };
 	void SetRenderable(bool isRenderable) { this->isRenderable = isRenderable; };
+	
+	bool IsActive() { return this->isActive; }
+	bool IsRenderable() { return this->isRenderable; }
 
 	std::string GetName() { return this->name; }
 };

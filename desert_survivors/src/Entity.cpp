@@ -12,10 +12,12 @@ Entity::Entity(std::string name)
 
 void Entity::Update(float dt)
 {
-	std::cout << "IN ENTITY UPDATE" << std::endl;
 	for (const auto& pair: this->components)
 	{
-		pair.second->Update(dt);
+		if (pair.second->IsActive())
+		{
+			pair.second->Update(dt);
+		}
 	}
 }
 
@@ -23,7 +25,10 @@ void Entity::Render()
 {
 	for (const auto& pair : this->components)
 	{
-		pair.second->Render();
+		if (pair.second->IsRenderable())
+		{
+			pair.second->Render();
+		}
 	}
 }
 

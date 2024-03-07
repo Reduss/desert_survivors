@@ -7,9 +7,9 @@
 #include "Component.h"
 #include "components/HUDComponent.h"
 #include "components/SpriteComponent.h"
-#include "components//TransformComponent.h"
-#include "components//KeyboardControlComponent.h"
-
+#include "components/TransformComponent.h"
+#include "components/KeyboardControlComponent.h"
+#include "components/CameraComponent.h"
 
 Game::Game(int w, int h)
 {
@@ -24,14 +24,14 @@ std::vector<Entity*> Game::GetWorld()
 
 void Game::SetupBasicEntities()
 {
-	Entity* HUD = new Entity("hud");
-	Entity* player = new Entity("player");
+	this->HUD = new Entity("hud");
+	this->player = new Entity("player");
 
 	HUD->AddComponent<HUDComponent>(new HUDComponent(*this));
-	player->AddComponent<TransformComponent>(new TransformComponent());
 	player->AddComponent<KeyboardControlComponent>(new KeyboardControlComponent());
+	player->AddComponent<TransformComponent>(new TransformComponent(50, 50, {200, 200}));
 	player->AddComponent<SpriteComponent>(new SpriteComponent());
-
+	player->AddComponent<CameraComponent>(new CameraComponent());
 
 	this->world.push_back(HUD);
 	this->world.push_back(player);
@@ -45,8 +45,11 @@ void Game::SetupBasicEntities()
 void Game::Init()
 {
 	InitWindow(this->windowWidth, this->windowsHeight, "Desert Survivors 0.1");
-	SetTargetFPS(60);
+	SetTargetFPS(Constants::targetFPS);
+	
 	this->SetupBasicEntities();
+	this->camera = this->player->GetComponent<CameraComponent>()->GetCamera();
+
 }
 
 void Game::Update()
@@ -56,34 +59,45 @@ void Game::Update()
 
 	for (Entity* e : world)
 	{
+
 		e->Update(dt);
 	}
+
 }
 
 void Game::Render()
 {
-	BeginDrawing();
 
+	// TODO: fix render lag
+
+
+	BeginDrawing();
+	
 	ClearBackground(WHITE);
 
 
-	for (Entity* e : world) 
+	BeginMode2D(*this->camera);
+
+	DrawRectangle(0, 0, 100, 100, GREEN);
+	DrawRectangle(500, 0, 100, 100, GREEN);
+	DrawRectangle(500, 600, 100, 100, GREEN);
+	DrawRectangle(0, 600, 100, 100, GREEN);
+	
+	for (Entity* e : world)
 	{
+		if (e->GetName() == "hud") { continue; }
+
 		e->Render();
 	}
 
+
+	EndMode2D();
+	this->HUD->Render();
 	EndDrawing();
 }
 
 void Game::Run()
 {
-	// call init
-	// game loop
-	//		get input
-	//		call update
-	//		call render
-	// exit
-
 	this->Init();
 	
 	while (!WindowShouldClose())

@@ -44,6 +44,21 @@ public:
 		}
 		offset = Constants::fontSize * 2;
 
+		DrawLine(
+			Constants::windowWidth / 2,
+			0,
+			Constants::windowWidth / 2,
+			Constants::windowHeight,
+			BLUE
+		);
+		DrawLine(
+			0,
+			Constants::windowHeight/ 2,
+			Constants::windowWidth,
+			Constants::windowHeight / 2,
+			BLUE
+		);
+
 	}
 };
 

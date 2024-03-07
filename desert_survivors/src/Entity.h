@@ -34,7 +34,7 @@ public:
 		//	return false; // Component already exists
 		//}
 		
-		comp->owner = this; // Assuming Component class has a SetOwner method
+		comp->owner = this;
 
 		this->components[&(typeid(T))] = comp;
 		return true;
@@ -55,14 +55,19 @@ public:
 	template<typename T>
 	T* GetComponent()
 	{
-		for (const auto pair : this->components)
+		auto it = this->components.find(&typeid(T));
+		if (it == this->components.end())
+		{
+			throw std::runtime_error(std::string("Couldnt find requested component"));
+		}
+		/*for (const auto pair : this->components)
 		{
 			if (pair.first == &typeid(T))
 			{
 				return dynamic_cast<T*>(pair.second);
 			}
-		}
-		return NULL;
+		}*/
+		return dynamic_cast<T*>(it->second);
 	}
 
 	~Entity();
